@@ -1,10 +1,11 @@
 import { Outlet } from "react-router-dom";
+import NavbarAll from "../components/Navbar";
 
 export default function UserLayout() {
 
     return (
         <>
-        <h1>-- user layout --</h1>
+        <NavbarAll/>
         <Outlet/>
         </>
     )

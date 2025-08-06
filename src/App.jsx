@@ -16,6 +16,10 @@ import LoginPage from "./pages/auth/LogicPage"
 import RegisterPage from "./pages/auth/RegisterPage"
 import AdminProtectedPage from "./components/AdminCheck"
 import AuthContextProvider from "./context/ProviderAuth"
+//redux provider
+import store from "./redux/store"
+import { Provider } from "react-redux"
+import CheckOutPage from "./pages/public/CheckOutPage"
 
 const router = createBrowserRouter([
   {
@@ -34,6 +38,10 @@ const router = createBrowserRouter([
         path: 'about',
         element: <AboutStorePage />
       },
+      {
+        path: 'checkout',
+        element: <CheckOutPage/>
+      }
     ],
   },
 
@@ -81,7 +89,9 @@ function App() {
   return (
     <>
       <AuthContextProvider>
-        <RouterProvider router={router} />
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
       </AuthContextProvider>
     </>
   )

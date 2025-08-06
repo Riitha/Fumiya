@@ -1,2 +1,13 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+@theme {
+    --color-casablanca:oklch(0.813 0.1329 70.49);
+    --color-redDamask:oklch(0.6551 0.1516 47.53);
+    --color-merino:oklch(0.9384 0.0205 74.66);
+    --color-malibu:oklch(0.7145 0.1478 266.89);
+
+    --color-chathams:oklch(0.3591 0.0848 249.03);
+    --color-calypso:oklch(0.5075 0.0967 248.63);
+    --color-coral:oklch(0.7207 0.1778 40.61);
+}
