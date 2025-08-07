@@ -1,9 +1,9 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { db } from "../../config/firebase"
 import Swal from "sweetalert2"
 import UploadWidget from "../../components/UploadWidget"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchProductById, updateProduct } from "../../redux/feature/products/productsSlice"
 
 
 export default function EditProduct() {
@@ -20,52 +20,43 @@ export default function EditProduct() {
 
     const { id } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { product, loading, error } = useSelector((state) => state.products);
 
     useEffect(() => {
-        const fetchProduct = async () => {
-            const docRef = doc(db, 'products', id);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                setJudul(data.judul);
-                setJudul(data.judul);
-                setAuthor(data.author);
-                setCoverImage(data.coverImage);
-                setGenre(data.genre);
-                setHarga(data.harga);
-                setPenerbit(data.penerbit);
-                setSinopsis(data.sinopsis);
-                setTahunTerbit(data.tahunTerbit || "");
-                setStok(data.stok || "");
-                setKategori(data.kategori || "");
+        dispatch(fetchProductById(id))
+    }, [dispatch, id])
+    useEffect(() => {
+        if (product) {
+            setJudul(product.judul);
+            setAuthor(product.author);
+            setCoverImage(product.coverImage);
+            setGenre(product.genre);
+            setHarga(product.harga);
+            setPenerbit(product.penerbit);
+            setSinopsis(product.sinopsis);
+            setTahunTerbit(product.tahunTerbit);
+            setStok(product.stok);
+            setKategori(product.kategori);
+        }
+    }, [product])
 
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "data tidak ditemukan!",
-                });
-                navigate('/admin/dashboard')
-            }
-        };
-        fetchProduct();
-    }, [id, navigate])
     const handleUpdateProduct = async (e) => {
         e.preventDefault();
         try {
-            const productRef = doc(db, 'products', id);
-            await updateDoc(productRef, {
-                judul,
-                author,
-                coverImage,
-                genre,
+            const updateData = {
+                judul: judul,
+                author: author,
+                coverImage: coverImage,
+                genre: genre,
                 harga: Number(harga),
-                penerbit,
+                penerbit: penerbit,
                 tahunTerbit: Number(tahunTerbit),
                 stok: Number(stok),
-                kategori,
-                sinopsis,
-            });
+                kategori: kategori,
+                sinopsis: sinopsis,
+            }
+            await dispatch(updateProduct({ id, updateData }))
             Swal.fire({
                 title: "update berhasil!",
                 icon: "success",
@@ -79,6 +70,9 @@ export default function EditProduct() {
             });
         }
     };
+    if (loading) return <span className="loading loading-infinity loading-xl"></span>
+    if (error) return <h1>data tidak ditemukan!</h1>
+
     return (
         <>
             <section className="bg-white overflow-auto h-screen">

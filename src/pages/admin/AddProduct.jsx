@@ -1,9 +1,10 @@
-import { addDoc, collection, serverTimestamp } from "firebase/firestore"
+import { serverTimestamp } from "firebase/firestore"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { db } from "../../config/firebase"
 import Swal from "sweetalert2"
 import UploadWidget from "../../components/UploadWidget"
+import { useDispatch } from "react-redux"
+import { addProduct } from "../../redux/feature/products/productsSlice"
 
 export default function AddProduct() {
     const [judul, setJudul] = useState("");
@@ -18,27 +19,29 @@ export default function AddProduct() {
     const [kategori, setKategori] = useState("");
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const handleAddProduct = async (e) => {
+    const handleAdd = async (e) => {
         e.preventDefault();
-
         if (!judul || !author || !coverImage || !genre || !harga || !penerbit || !sinopsis) {
             Swal.fire("masih ada data kosong");
+            return;
         }
         try {
-            await addDoc(collection(db, "products"), {
-                judul,
-                author,
-                coverImage,
-                genre,
+            const newProduct = {
+                judul: judul,
                 harga: Number(harga),
-                penerbit,
-                tahunTerbit: Number(tahunTerbit),
+                coverImage: coverImage,
+                genre: genre,
+                author: author,
+                penerbit: penerbit,
+                tahunTerbit: tahunTerbit,
                 stok: Number(stok),
-                kategori,
-                sinopsis,
+                kategori: kategori,
+                sinopsis: sinopsis,
                 createdAt: serverTimestamp(),
-            });
+            };
+            dispatch(addProduct(newProduct));
             await Swal.fire({
                 title: "buku berhasil ditambahkan!",
                 icon: "success",
@@ -52,15 +55,15 @@ export default function AddProduct() {
                 text: "Something went wrong!",
             });
         }
-    };
 
+    }
 
     return (
         <>
             <section className="bg-white overflow-auto h-screen">
                 <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
                     <h2 className="mb-4 text-xl font-bold text-gray-900">Add a new product</h2>
-                    <form onSubmit={handleAddProduct}>
+                    <form onSubmit={handleAdd}>
                         <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
                             <div className="sm:col-span-2">
                                 <label for="judul" className="block mb-2 text-sm font-medium text-gray-900">judul buku</label>
@@ -211,7 +214,7 @@ export default function AddProduct() {
                             <button type="submit" className="btn btn-primary">
                                 Tambah
                             </button>
-                            <button onClick={()=>navigate('/admin/dashboard')} type="button" className="btn btn-secondary">
+                            <button onClick={() => navigate('/admin/dashboard')} type="button" className="btn btn-secondary">
                                 kembali
                             </button>
                         </div>

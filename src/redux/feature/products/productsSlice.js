@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { db } from '../../../config/firebase';
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, limit, orderBy, query, startAfter, updateDoc, where } from 'firebase/firestore';
 
 const initialState = {
     products: [],
@@ -18,8 +18,9 @@ export const productsSlice = createSlice({
             state.error = null;
         },
         fetchProductsSuccess: (state, action) => {
+            state.products = action.payload.products;
+            state.totalPage = action.payload.totalPage;
             state.loading = false;
-            state.product = action.payload;
         },
         fetchProductSuccess: (state, action) => {
             state.loading = false;
@@ -34,15 +35,45 @@ export const productsSlice = createSlice({
 
 export const { fetchPending, fetchProductSuccess, fetchProductsSuccess, fetchReject } = productsSlice.actions;
 
-export const fetchProducts = () => async (dispatch) => {
+export const fetchProducts = ( {genre="", kategori='', sort='', page= 1, pageSize= 8} ) => async (dispatch) => {
     try {
         dispatch(fetchPending());
-        const querySnapshot = await getDocs(collection(db, 'products'), orderBy('createAt', 'desc'));
-        const data = querySnapshot.docs.map((doc) => ({
+        let q = collection(db, 'products');
+
+        if (genre && kategori) {
+            q = query(q, where('genre', '==', genre), where('kategori', '==', kategori));
+        } else if (genre) {
+            q = query(q, where('genre', '==', genre));
+        }else if (kategori) {
+            q = query(q, where('kategori', "==", kategori));
+        }
+
+        if (sort === 'price-asc') {
+            q = query(q, orderBy('harga', 'asc'));
+        } else if (sort === 'price-desc') {
+            q = query(q, orderBy('harga', 'desc'));
+        } else {
+            q = query(q, orderBy('createdAt', 'desc'));
+        }
+
+        const totalSnap = await getDocs(q);
+        const totalItems = totalSnap.size;
+        const totalPage = Math.ceil(totalItems / pageSize);
+
+        if (page > 1) {
+            const prevSnap = await getDocs(query(q, limit((page-1) * pageSize)));
+            const lastVisible = prevSnap.docs.at(-1);
+            const q = query(q, startAfter(lastVisible), limit(pageSize));
+        } else {
+            q = query(q, limit(pageSize))
+        }
+        const snapShot = await getDocs(q);
+        const products = snapShot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
+            createdAt: doc.data().createdAt?.toDate().toString() || null,
         }));
-        dispatch(fetchProductsSuccess(data))
+        dispatch(fetchProductsSuccess( {products, totalPage} ))
     } catch (error) {
         dispatch(fetchReject(error.message))
     }
@@ -54,7 +85,19 @@ export const fetchProductById = (id) => async (dispatch) => {
         const docRef = doc(db, 'products', id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-            dispatch(fetchProductSuccess({ id: docSnap.id, ...docSnap.data()}));
+            dispatch(fetchProductSuccess({
+                id: docSnap.id,
+                judul: docSnap.data().judul,
+                author: docSnap.data().author,
+                coverImage: docSnap.data().coverImage,
+                genre: docSnap.data().genre,
+                harga: docSnap.data().harga,
+                penerbit: docSnap.data().penerbit,
+                sinopsis: docSnap.data().sinopsis,
+                tahunTerbit: docSnap.data().tahunTerbit,
+                stok: docSnap.data().stok,
+                kategori: docSnap.data().kategori,
+            }));
         } else {
             dispatch(fetchReject('product not found'));
         }
@@ -62,6 +105,7 @@ export const fetchProductById = (id) => async (dispatch) => {
         dispatch(fetchReject(error.message));
     }
 }
+
 
 export const addProduct = (newProduct) => async (dispatch) => {
     try {
@@ -83,10 +127,11 @@ export const deleteProduct = (id) => async (dispatch) => {
     }
 }
 
-export const updateProduct = (id, updateData) => async (dispatch) => {
+export const updateProduct = ({id, updateData}) => async (dispatch) => {
     try {
         dispatch(fetchPending());
         const docRef = doc(db, 'products', id);
+        console.log("Data yang dikirim:", updateData);
         await updateDoc(docRef, updateData);
         dispatch(fetchProducts());
     } catch (error) {
