@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { rupiah } from "../../utils/RupiahCurrent";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/feature/products/productsSlice";
+import SearchBar from "../../components/SearchBar";
 
 export default function Dashboard() {
     const [filterGenre, setFilterGenre] = useState('');
@@ -16,6 +17,9 @@ export default function Dashboard() {
     const navigate = useNavigate();
     const PAGE_LIMIT = 10;
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const renderProduct = searchTerm ? products.filter((p) => p.judul.toLowerCase().includes(searchTerm.toLowerCase())) : products;
 
     useEffect(() => {
         if (currentPage > totalPage) {
@@ -90,6 +94,9 @@ export default function Dashboard() {
     return (
         <>
             <main className="w-full h-full">
+                <div>
+                    <SearchBar setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
+                </div>
                 <div className="flex gap-2 items-center w-full justify-center ">
                     <fieldset className="fieldset">
                         <legend className="fieldset-legend">genre</legend>
@@ -151,13 +158,13 @@ export default function Dashboard() {
 
                         <tbody>
 
-                            {(products.length === 0 ?
+                            {(renderProduct.length === 0 ?
                                 <tr>
                                     <td colSpan="5" className="text-center">
                                         Belum ada produk
                                     </td>
                                 </tr> :
-                                products.map((p, index) => (
+                                renderProduct.map((p, index) => (
                                     <tr key={p.id}>
 
                                         <th>{index + 1}</th>
