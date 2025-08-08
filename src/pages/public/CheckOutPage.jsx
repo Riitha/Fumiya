@@ -2,11 +2,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearCart, decrementQty, incrementQty, removeCart } from "../../redux/feature/cart/cartslice";
 import { rupiah } from "../../utils/RupiahCurrent";
 import Swal from "sweetalert2";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function CheckOutPage() {
     const dispatch = useDispatch();
     const items = useSelector((state) => state.cart.items);
     const total = items.reduce((sum, item) => sum + item.harga * item.qty, 0);
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const handleConfirm = () => {
         console.log('pesanan dikonfirmasi');
@@ -17,7 +22,12 @@ export default function CheckOutPage() {
             draggable: true
         });
     }
-
+    useEffect(() => {
+        if (!user) {
+            navigate('/auth/login')
+        }
+    }, [user, navigate])
+    
     if (items.length === 0) return <p>Keranjang Kosong</p>;
 
     return (
