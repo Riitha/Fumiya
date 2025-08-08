@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart, decrementQty, incrementQty, removeCart } from "../../redux/feature/cart/cartslice";
 import { rupiah } from "../../utils/RupiahCurrent";
+import Swal from "sweetalert2";
 
 export default function CheckOutPage() {
     const dispatch = useDispatch();
@@ -10,20 +11,24 @@ export default function CheckOutPage() {
     const handleConfirm = () => {
         console.log('pesanan dikonfirmasi');
         dispatch(clearCart());
-        alert("checkout sukses!");
+        Swal.fire({
+            title: "Transaksi berhasil!",
+            icon: "success",
+            draggable: true
+        });
     }
 
     if (items.length === 0) return <p>Keranjang Kosong</p>;
 
     return (
         <>
-            <h1>Checkout</h1>
             <div>
                 <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-                    <table className="table">
-                        {/* head */}
+                    <table className="table md:overflow-x-auto">
+
                         <thead>
                             <tr>
+                                <th></th>
                                 <th></th>
                                 <th>Nama item</th>
                                 <th>harga</th>
@@ -32,7 +37,7 @@ export default function CheckOutPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {/* row 1 */}
+
                             {items.map((item, index) => (
                                 <tr key={item.id}>
                                     <th>{index + 1}</th>
@@ -40,12 +45,19 @@ export default function CheckOutPage() {
                                         <div className="flex flex-row items-center gap-4">
                                             <img src={item.coverImage}
                                                 alt={item.name}
-                                                className="w-20 h-28 object-cover" />
-                                            {item.judul}
+                                                className="max-w-[80px] h-auto object-cover" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="flex flex-col">
+                                            <span className="text-md ">
+                                                {item.judul}
+                                            </span>
                                         </div>
                                     </td>
 
                                     <td>{rupiah(item.harga)}</td>
+
                                     <td>
                                         <div className="flex items-center gap-2">
                                             <button
@@ -85,8 +97,8 @@ export default function CheckOutPage() {
                         </tfoot>
                     </table>
                 </div>
-                <div className="w-full flex"> 
-                <button onClick={handleConfirm} className="btn btn-primary my-4">konfirmasi</button>
+                <div className="w-full flex">
+                    <button onClick={handleConfirm} className="btn btn-primary my-4 ml-auto">konfirmasi</button>
                 </div>
 
             </div>

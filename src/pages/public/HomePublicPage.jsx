@@ -141,7 +141,7 @@ export default function HomePublicPage() {
                                                     }}
                                                     className="btn btn-neutral"
                                                 >
-                                                    Add cart
+                                                    keranjang
                                                 </button>
                                             </div>
                                         </div>
