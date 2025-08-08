@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { auth, db } from "../../config/firebase"
 import Swal from 'sweetalert2'
+import CarouselAuth from "../../components/Carousel"
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("");
@@ -40,17 +41,13 @@ export default function RegisterPage() {
         <>
             <div className="hero bg-base-200 min-h-screen">
                 <div className="hero-content flex-col lg:flex-row-reverse">
-                    <div className="text-center lg:text-left">
-                        <h1 className="text-5xl font-bold">Login now!</h1>
-                        <p className="py-6">
-                            Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-                            quasi. In deleniti eaque aut repudiandae et a id nisi.
-                        </p>
-                    </div>
+                    <h1 className="text-4xl font-bold lg:hidden">LOGIN</h1>
+                    <CarouselAuth />
                     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                         <div className="card-body">
                             <form onSubmit={handleRegister}>
                                 <fieldset className="fieldset">
+                                    <legend className="fieldset-legend hidden md:block md:text-xl lg:block lg:text-2xl">REGISTER</legend>
                                     <label className="label">Email</label>
                                     <input
                                         type="email"
@@ -73,7 +70,7 @@ export default function RegisterPage() {
                                         className="input" placeholder="Password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)} />
-                                    <div><a className="link link-hover">Forgot password?</a></div>
+                                    <div>Sudah punya akun?<span onClick={()=>navigate('/auth/login')} className="link link-hover hover:text-blue-200"> klik di sini!</span></div>
                                     <button className="btn btn-neutral mt-4">Register</button>
                                 </fieldset>
                             </form>

@@ -11,8 +11,9 @@ import AboutStorePage from "./pages/public/AboutStorePage"
 import Dashboard from "./pages/admin/DashboardPage"
 import AddProduct from "./pages/admin/AddProduct"
 import EditProduct from "./pages/admin/EditProduct"
+import DetailProduct from "./pages/public/DetailProduct"
 //auth pages
-import LoginPage from "./pages/auth/LogicPage"
+import LoginPage from "./pages/auth/LoginPage"
 import RegisterPage from "./pages/auth/RegisterPage"
 import AdminProtectedPage from "./components/AdminCheck"
 import AuthContextProvider from "./context/ProviderAuth"
@@ -20,6 +21,7 @@ import AuthContextProvider from "./context/ProviderAuth"
 import store from "./redux/store"
 import { Provider } from "react-redux"
 import CheckOutPage from "./pages/public/CheckOutPage"
+
 
 const router = createBrowserRouter([
   {
@@ -65,6 +67,10 @@ const router = createBrowserRouter([
         path: 'edit/:id',
         element: <EditProduct />
       },
+      {
+        path: 'detail/:id',
+        element: <DetailProduct/>
+      }
     ],
   },
 

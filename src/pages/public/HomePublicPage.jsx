@@ -5,6 +5,7 @@ import { addCart } from "../../redux/feature/cart/cartslice";
 import { useNavigate } from "react-router-dom";
 import { fetchProducts } from "../../redux/feature/products/productsSlice";
 import SearchBar from "../../components/SearchBar";
+import { Link } from "react-router";
 
 export default function HomePublicPage() {
     const [filterGenre, setFilterGenre] = useState('');
@@ -16,14 +17,15 @@ export default function HomePublicPage() {
     const { products, totalPage, loading } = useSelector((state) => state.products)
     const [currentPage, setCurrentPage] = useState(1);
     const PAGE_LIMIT = 8;
-    
+
     const [searchTerm, setSearchTerm] = useState('');
-    const renderProduct = searchTerm? products.filter((p)=> p.judul.toLowerCase().includes(searchTerm.toLowerCase())) : products;
+    const renderProduct = searchTerm ? products.filter((p) => p.judul.toLowerCase().includes(searchTerm.toLowerCase())) : products;
 
     useEffect(() => {
         if (currentPage > totalPage) {
-        setCurrentPage(1)
-    }}, [totalPage, currentPage])
+            setCurrentPage(1)
+        }
+    }, [totalPage, currentPage])
 
     useEffect(() => {
         dispatch(fetchProducts({
@@ -56,9 +58,9 @@ export default function HomePublicPage() {
 
     return (
         <>
-            <main className="w-full h-full box-border">
-                <div>
-                    <SearchBar setSearchTerm={setSearchTerm} searchTerm={searchTerm}/>
+            <main className="w-full min-h-screen box-border">
+                <div className="flex justify-center my-8">
+                    <SearchBar setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
                 </div>
                 <div className="flex flex-cols justify-center gap-3 my-2  md:flex flex-row">
                     <fieldset className="fieldset">
@@ -105,23 +107,26 @@ export default function HomePublicPage() {
 
                     <button onClick={handleClearFilterSort} className="btn btn-soft btn-warning mt-8">clear filter</button>
                 </div>
-                <div className="flex sm:w-[90%] md:w-[80%] my-2 mx-auto">
-                    <h1 className="rounded-2xl p-1 text-center text-sm sm:text-md md:text-lg w-[50%] sm:w-[40%] md:w-[10%] bg-sky-300">HOME</h1>
+                <div className="flex justify-center sm:w-[90%] md:w-[80%] my-2 mx-auto">
+                    <h1 className="rounded-2xl p-1 text-center text-sm sm:text-md md:text-lg w-[50%] sm:w-[40%] md:w-[10%] border">HOME</h1>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 w-[100%] sm:w-[90%] md:w-[80%] bg-malibu mx-auto rounded">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl w-full mx-auto sm:p-8 md:p-8 lg:p-4 bg-malibu rounded">
 
                     {(renderProduct.length === 0 ?
                         <div className="text-md text center">
                             Belum ada produk!
-                        </div> :renderProduct.map((p) => (
-                            <div key={p.id} className="card w-96 bg-white/20 h-auto shadow-sm">
+                        </div> : renderProduct.map((p) => (
+                            <div key={p.id} className="card w-full sm:w-[320px] md:w-[300px] lg:w-[300px] bg-white/20 h-auto shadow-sm">
                                 <div className="card-body">
-                                    <figure className="h-120 flex justify-center items-center">
-                                        <img src={p.coverImage} alt={p.judul} className="object-cover w-full h-full" />
-                                    </figure>
-                                    <div className="flex flex-col justify-between h-56">
-                                        <h2 className="card-title text-xl">{p.judul}</h2>
+                                    <Link to={`/admin/detail/${p.id}`}>
+                                        <figure className="h-[280px] w-full flex justify-center items-center">
+                                            <img src={p.coverImage} alt={p.judul} className="object-contain w-full h-full" />
+                                        </figure>
+                                    </Link>
+
+                                    <div className="flex flex-col justify-between h-56 md:h-auto">
+                                        <h2 className="card-title line-clamp-2 text-sm md:text-lg ">{p.judul}</h2>
                                         <div className="flex flex-col gap-2">
                                             <span className={`badge ${p.stok > 0 ? 'badge badge-success' : 'badge badge-error'}`}>{p.stok > 0 ? 'tersedia' : 'terjual habis'}</span>
                                             <div className="flex flex row gap-2">
@@ -146,7 +151,7 @@ export default function HomePublicPage() {
                             </div>
                         )))}
                 </div>
-                <div className="my-4 w-full h-auto flex justify-center">
+                <div className="flex justify-center my-4">
                     <div className="join]">
                         <button disabled={currentPage === 1} onClick={handlePrevPage} className="join-item btn">«</button>
                         <button className="join-item btn">{currentPage} of {totalPage}</button>

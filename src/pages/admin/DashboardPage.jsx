@@ -94,7 +94,7 @@ export default function Dashboard() {
     return (
         <>
             <main className="w-full h-full">
-                <div>
+                <div className="flex justify-center my-8">
                     <SearchBar setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
                 </div>
                 <div className="flex gap-2 items-center w-full justify-center ">

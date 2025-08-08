@@ -42,14 +42,13 @@ export default function NavbarAll() {
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                             {role === 'admin' && <li><Link to={'/admin/dashboard'}>Admin</Link></li>}
                             <li><Link to={'/'}>Homepage</Link> </li>
-                            <li><a>About</a></li>
                         </ul>
                     </div>
                 </div>
                 <div className="navbar-center">
                     <a className="btn btn-ghost text-xl">daisyUI</a>
                 </div>
-                <div className="navbar-end">
+                <div className="navbar-end gap-2">
                     <button 
                     onClick={()=> navigate('/checkout')}
                     className="btn btn-btn-info rounded-xl">

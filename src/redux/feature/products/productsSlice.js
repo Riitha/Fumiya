@@ -63,7 +63,7 @@ export const fetchProducts = ( {genre="", kategori='', sort='', page= 1, pageSiz
         if (page > 1) {
             const prevSnap = await getDocs(query(q, limit((page-1) * pageSize)));
             const lastVisible = prevSnap.docs.at(-1);
-            const q = query(q, startAfter(lastVisible), limit(pageSize));
+            q = query(q, startAfter(lastVisible), limit(pageSize));
         } else {
             q = query(q, limit(pageSize))
         }
