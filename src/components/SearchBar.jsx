@@ -1,7 +1,7 @@
 export default function SearchBar({ searchTerm, setSearchTerm }) {
     return (
         <>
-            <label className="input">
+            <label className="input mt-4 mb-4 bg-coral">
                 <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <g
                         strokeLinejoin="round"

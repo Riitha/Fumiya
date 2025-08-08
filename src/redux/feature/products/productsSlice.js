@@ -52,6 +52,10 @@ export const fetchProducts = ( {genre="", kategori='', sort='', page= 1, pageSiz
             q = query(q, orderBy('harga', 'asc'));
         } else if (sort === 'price-desc') {
             q = query(q, orderBy('harga', 'desc'));
+        } else if (sort === 'terbitan-lama') {
+            q = query(q, orderBy('createdAt', 'asc'))
+        } else if (sort === 'terbitan-baru') {
+            q = query(q, orderBy('createdAt', 'desc'))
         } else {
             q = query(q, orderBy('createdAt', 'desc'));
         }

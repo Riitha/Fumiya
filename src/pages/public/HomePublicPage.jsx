@@ -58,14 +58,13 @@ export default function HomePublicPage() {
 
     return (
         <>
-            <main className="w-full min-h-screen box-border">
-                <div className="flex justify-center my-8">
+            <main className="w-full min-h-screen box-border bg-desert">
+                <div className="flex justify-center">
                     <SearchBar setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
                 </div>
-                <div className="flex flex-cols justify-center gap-3 my-2  md:flex flex-row">
+                <div className="flex gap-2 items-center w-full justify-center ">
                     <fieldset className="fieldset">
-                        <legend className="fieldset-legend">genre</legend>
-                        <select value={filterGenre} onChange={(e) => setFilterGenre(e.target.value)} className="select">
+                        <select value={filterGenre} onChange={(e) => setFilterGenre(e.target.value)} className="select bg-coral">
                             <option value='' disabled={true}>pilih genre</option>
                             <option value="fantasi">fantasi</option>
                             <option value="romance">romance</option>
@@ -86,8 +85,7 @@ export default function HomePublicPage() {
                     </fieldset>
 
                     <fieldset className="fieldset">
-                        <legend className="fieldset-legend">kategori buku</legend>
-                        <select value={filterKategori} onChange={(e) => setFilterKategori(e.target.value)} className="select">
+                        <select value={filterKategori} onChange={(e) => setFilterKategori(e.target.value)} className="select bg-coral">
                             <option value='' disabled={true}>jenis buku</option>
                             <option value="manga">manga</option>
                             <option value="light novel">light novel</option>
@@ -95,8 +93,7 @@ export default function HomePublicPage() {
                     </fieldset>
 
                     <fieldset className="fieldset">
-                        <legend className="fieldset-legend">sort</legend>
-                        <select value={sort} onChange={(e) => setSort(e.target.value)} className="select">
+                        <select value={sort} onChange={(e) => setSort(e.target.value)} className="select bg-coral">
                             <option value='' disabled={true}>urutkan berdasarkan</option>
                             <option value='price-asc' >paling murah</option>
                             <option value='price-desc'>paling mahal</option>
@@ -105,19 +102,21 @@ export default function HomePublicPage() {
                         </select>
                     </fieldset>
 
-                    <button onClick={handleClearFilterSort} className="btn btn-soft btn-warning mt-8">clear filter</button>
-                </div>
-                <div className="flex justify-center sm:w-[90%] md:w-[80%] my-2 mx-auto">
-                    <h1 className="rounded-2xl p-1 text-center text-sm sm:text-md md:text-lg w-[50%] sm:w-[40%] md:w-[10%] border">HOME</h1>
+                    <button onClick={handleClearFilterSort} className="btn btn-secondary">clear filter</button>
+                    <button onClick={() => navigate("/admin/add")} className="btn btn-info">Tambah Produk</button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl w-full mx-auto sm:p-8 md:p-8 lg:p-4 bg-malibu rounded">
+                <div className="flex justify-center sm:w-[90%] md:w-[80%] my-2 mx-auto">
+                    <h1 className="rounded-2xl p-1 text-center text-sm sm:text-md md:text-lg w-[50%] sm:w-[40%] md:w-[10%] border bg-malibu">HOME</h1>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl w-full mx-auto sm:p-8 md:p-8 lg:p-4 bg-redDamask rounded">
 
                     {(renderProduct.length === 0 ?
                         <div className="text-md text center">
                             Belum ada produk!
                         </div> : renderProduct.map((p) => (
-                            <div key={p.id} className="card w-full sm:w-[320px] md:w-[300px] lg:w-[300px] bg-white/20 h-auto shadow-sm">
+                            <div key={p.id} className="card w-full sm:w-[320px] md:w-[300px] lg:w-[300px] bg-white/80 h-auto shadow-sm">
                                 <div className="card-body">
                                     <Link to={`/admin/detail/${p.id}`}>
                                         <figure className="h-[280px] w-full flex justify-center items-center">
@@ -125,22 +124,22 @@ export default function HomePublicPage() {
                                         </figure>
                                     </Link>
 
-                                    <div className="flex flex-col justify-between h-56 md:h-auto">
-                                        <h2 className="card-title line-clamp-2 text-sm md:text-lg ">{p.judul}</h2>
+                                    <div className="flex flex-col justify-between md:h-auto">
+                                        <h2 className="card-title line-clamp-2 text-sm text-malibu md:text-lg ">{p.judul}</h2>
                                         <div className="flex flex-col gap-2">
                                             <span className={`badge ${p.stok > 0 ? 'badge badge-success' : 'badge badge-error'}`}>{p.stok > 0 ? 'tersedia' : 'terjual habis'}</span>
                                             <div className="flex flex row gap-2">
                                                 <span className="badge bg-gray-600">{p.kategori}</span>
                                                 <span className="badge bg-gray-600">{p.genre}</span>
                                             </div>
-                                            <span className="ml-auto text-lg">{rupiah(p.harga)}</span>
+                                            <span className="ml-auto text-lg text-redDamask font-bold">{rupiah(p.harga)}</span>
                                             <div className="card-actions justify-end  items-end flex-col w-full my-2">
                                                 <button
                                                     onClick={() => {
                                                         dispatch(addCart(p))
                                                         navigate('/checkout')
                                                     }}
-                                                    className="btn btn-primary"
+                                                    className="btn btn-neutral"
                                                 >
                                                     Add cart
                                                 </button>
@@ -151,11 +150,11 @@ export default function HomePublicPage() {
                             </div>
                         )))}
                 </div>
-                <div className="flex justify-center my-4">
-                    <div className="join]">
-                        <button disabled={currentPage === 1} onClick={handlePrevPage} className="join-item btn">«</button>
-                        <button className="join-item btn">{currentPage} of {totalPage}</button>
-                        <button disabled={currentPage === totalPage} onClick={handleNextPage} className="join-item btn">»</button>
+                <div className="flex justify-center items-center">
+                    <div className="join my-4">
+                        <button disabled={currentPage === 1} onClick={handlePrevPage} className="join-item btn bg-malibu">«</button>
+                        <button className="join-item btn bg-malibu">{currentPage} of {totalPage}</button>
+                        <button disabled={currentPage === totalPage} onClick={handleNextPage} className="join-item btn bg-malibu">»</button>
                     </div>
                 </div>
 

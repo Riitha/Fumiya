@@ -93,14 +93,13 @@ export default function Dashboard() {
 
     return (
         <>
-            <main className="w-full h-full">
-                <div className="flex justify-center my-8">
+            <main className="w-full h-full bg-desert">
+                <div className="flex justify-center">
                     <SearchBar setSearchTerm={setSearchTerm} searchTerm={searchTerm} />
                 </div>
                 <div className="flex gap-2 items-center w-full justify-center ">
                     <fieldset className="fieldset">
-                        <legend className="fieldset-legend">genre</legend>
-                        <select value={filterGenre} onChange={(e) => setFilterGenre(e.target.value)} className="select">
+                        <select value={filterGenre} onChange={(e) => setFilterGenre(e.target.value)} className="select bg-coral">
                             <option value='' disabled={true}>pilih genre</option>
                             <option value="fantasi">fantasi</option>
                             <option value="romance">romance</option>
@@ -121,8 +120,7 @@ export default function Dashboard() {
                     </fieldset>
 
                     <fieldset className="fieldset">
-                        <legend className="fieldset-legend">kategori buku</legend>
-                        <select value={filterKategori} onChange={(e) => setFilterKategori(e.target.value)} className="select">
+                        <select value={filterKategori} onChange={(e) => setFilterKategori(e.target.value)} className="select bg-coral">
                             <option value='' disabled={true}>jenis buku</option>
                             <option value="manga">manga</option>
                             <option value="light novel">light novel</option>
@@ -130,8 +128,7 @@ export default function Dashboard() {
                     </fieldset>
 
                     <fieldset className="fieldset">
-                        <legend className="fieldset-legend">sort</legend>
-                        <select value={sort} onChange={(e) => setSort(e.target.value)} className="select">
+                        <select value={sort} onChange={(e) => setSort(e.target.value)} className="select bg-coral">
                             <option value='' disabled={true}>urutkan berdasarkan</option>
                             <option value='price-asc' >paling murah</option>
                             <option value='price-desc'>paling mahal</option>
@@ -140,19 +137,20 @@ export default function Dashboard() {
                         </select>
                     </fieldset>
 
-                    <button onClick={handleClearFilterSort} className="btn btn-soft btn-warning mt-8">clear filter</button>
-                    <button onClick={() => navigate("/admin/add")} className="btn btn-primary mt-8">Tambah Produk</button>
+                    <button onClick={handleClearFilterSort} className="btn btn-secondary">clear filter</button>
+                    <button onClick={() => navigate("/admin/add")} className="btn btn-info">Tambah Produk</button>
                 </div>
-                <div className="overflow-x-auto">
+
+                <div className="overflow-x-auto text-black my-4 border">
                     <table className="table">
                         <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Judul</th>
-                                <th>Genre</th>
-                                <th>Harga</th>
-                                <th>status barang</th>
-                                <th>Modif</th>
+                            <tr className="text-black">
+                                <th className="border">No</th>
+                                <th className="border">Judul</th>
+                                <th className="border">Genre</th>
+                                <th className="border">Harga</th>
+                                <th className="border">status barang</th>
+                                <th className="border">Modif</th>
                             </tr>
                         </thead>
 
@@ -167,9 +165,9 @@ export default function Dashboard() {
                                 renderProduct.map((p, index) => (
                                     <tr key={p.id}>
 
-                                        <th>{index + 1}</th>
+                                        <th className="border">{index + 1}</th>
 
-                                        <td>
+                                        <td className="border">
                                             <div className="flex items-center gap-3">
                                                 <div className="avatar">
                                                     <div className="rounded-sm h-40 w-30">
@@ -179,7 +177,7 @@ export default function Dashboard() {
                                                             className="w-full h-full object-cover" />
                                                     </div>
                                                 </div>
-                                                <div>
+                                                <div >
                                                     <div className="font-bold">{p.judul}</div>
                                                     <div className="text-sm opacity-50">{p.author}</div>
                                                     <div className="text-sm">{p.tahunTerbit}</div>
@@ -187,7 +185,7 @@ export default function Dashboard() {
                                             </div>
                                         </td>
 
-                                        <td>
+                                        <td className="border">
                                             <div className="flex gap-2">
                                                 <p className="bg-blue-500 p-1 rounded-md">{p.genre} </p>
                                                 <p className="bg-pink-500 p-1 rounded-md">{p.kategori}</p>
@@ -196,27 +194,27 @@ export default function Dashboard() {
                                             <span className="badge badge-ghost badge-sm">{p.penerbit}</span>
                                         </td>
 
-                                        <td>{rupiah(p.harga)}</td>
+                                        <td className="border">{rupiah(p.harga)}</td>
 
-                                        <td>
+                                        <td className="border">
                                             <span
-                                                className={`badge ${p.stok > 0 ? "badge-outline badge-success" : "badge-outline badge-error"}`}
+                                                className={`badge ${p.stok > 0 ? "badge badge-success" : "badge badge-error"}`}
                                             >
                                                 {p.stok > 0 ? "tersedia" : "terjual habis"}
                                             </span>
                                         </td>
 
-                                        <td>
+                                        <td className="border">
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={() => navigate(`/admin/edit/${p.id}`)}
-                                                    className="btn btn-ghost btn-xs"
+                                                    className="btn btn-ghost btn-md"
                                                 >
                                                     Edit
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(p.id)}
-                                                    className="btn btn-ghost btn-xs text-red-500"
+                                                    className="btn btn-ghost btn-md text-red-500"
                                                 >
                                                     Delete
                                                 </button>
@@ -227,7 +225,7 @@ export default function Dashboard() {
                             )}
                         </tbody>
 
-                        <tfoot>
+                        <tfoot className="text-black">
                             <tr>
                                 <th>No</th>
                                 <th>Judul</th>
@@ -238,12 +236,14 @@ export default function Dashboard() {
                         </tfoot>
                     </table>
                 </div>
-
-                <div className="join">
-                    <button disabled={currentPage === 1} onClick={handlePrevPage} className="join-item btn">«</button>
-                    <button className="join-item btn">{currentPage} of {totalPage}</button>
-                    <button disabled={currentPage === totalPage} onClick={handleNextPage} className="join-item btn">»</button>
+                <div className="flex justify-center">
+                    <div className="join mb-4 mt-2">
+                        <button disabled={currentPage === 1} onClick={handlePrevPage} className="join-item btn bg-malibu">«</button>
+                        <button className="join-item btn bg-malibu">{currentPage} of {totalPage}</button>
+                        <button disabled={currentPage === totalPage} onClick={handleNextPage} className="join-item btn bg-malibu">»</button>
+                    </div>
                 </div>
+
             </main>
         </>
     )
